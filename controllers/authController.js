@@ -19,9 +19,10 @@ exports.loginWithJWT = async (req, res) => {
     const token = jwt.sign(
       {
         user_id: user.id,
-        role: user.role,
-        district_id: user.district_id,
-        army_unit_id: user.army_unit_id
+        role_id: user.role_id,
+        sector_id: user.sector_id,
+        army_unit_id: user.army_unit_id,
+        mobile_number:user.mobile_number
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
@@ -33,9 +34,10 @@ exports.loginWithJWT = async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
-        role: user.role,
-        district_id: user.district_id,
-        army_unit_id: user.army_unit_id
+        role_id: user.role_id,
+        sector_id: user.sector_id,
+        army_unit_id: user.army_unit_id,
+        mobile_number:user.mobile_number
       }
     });
   } catch (err) {
