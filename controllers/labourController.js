@@ -1,3 +1,5 @@
+const db = require('../config/db');
+
 const labourModel = require('../models/labourModel');
 const userModel = require('../models/userModel')
 const path = require('path');
@@ -71,3 +73,79 @@ exports.assignArmyUnit = async (req, res) => {
   }
 };
 
+
+// // Get labourers assigned to army unit using army unit mobile_number number
+// exports.getLabourersByArmyUnitPhone = async (req, res) => {
+//   const mobile_number = req.params.mobile_number;
+
+//   try {
+//     // First find army_unit by mobile_number
+//     const result = await db.query('SELECT id FROM army_units WHERE mobile_number = $1', [mobile_number]);
+
+//     if (result.rows.length === 0) {
+//       return res.status(404).json({ message: 'Army unit not found with this mobile_number number' });
+//     }
+
+//     const army_unit_id = result.rows[0].id;
+
+//     // Fetch all labourers assigned to this army_unit
+//     const labourers = await db.query('SELECT * FROM labourers WHERE army_unit_id = $1', [
+//       army_unit_id,
+//     ]);
+
+//     return res.status(200).json({ labourers: labourers.rows });
+//   } catch (err) {
+//     console.error(err);
+//     return res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
+
+// exports.getAssignedLaboursForArmyUnit = async (req, res) => {
+//   const mobile = req.params.mobile_number;
+
+//   try {
+//     // Get army_unit_id from user (army user)
+//     const [user] = await db.query('SELECT army_unit_id FROM users WHERE mobile_number = ?', [mobile]);
+
+//     if (!user.length || !user[0].army_unit_id) {
+//       return res.status(404).json({ error: 'Army unit not found for this number' });
+//     }
+
+//     const armyUnitId = user[0].army_unit_id;
+
+//     // Get labours assigned to this army unit
+//     const [labours] = await db.query(`
+//       SELECT id, name, father_name, contact_number, aadhaar_number, created_at 
+//       FROM labourers 
+//       WHERE army_unit_id = ?
+//     `, [armyUnitId]);
+
+//     res.status(200).json({
+//       army_unit_id: armyUnitId,
+//       total_labours: labours.length,
+//       labours
+//     });
+
+//   } catch (err) {
+//     console.error('Error fetching assigned labours:', err);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+exports.getAssignedLaboursByMobile = async (req, res) => {
+  const mobileNumber = req.params.mobile_number;
+
+  try {
+    const labourers = await labourModel.getAssignedLaboursByMobile(mobileNumber);
+
+    if (!labourers) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ labours: labourers });
+  } catch (error) {
+    console.error('Error fetching assigned labours:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

@@ -48,3 +48,24 @@ exports.assignArmyUnits = async (army_unit_id,labour_ids) => {
     }
   
 };
+exports.getAssignedLaboursByMobile = async (mobileNumber) => {
+  // Step 1: Get army_unit_id from users table
+  const [userRows] = await db.query(
+    'SELECT army_unit_id FROM users WHERE mobile_number = ?',
+    [mobileNumber]
+  );
+
+  if (userRows.length === 0) {
+    return null; // User not found
+  }
+
+  const armyUnitId = userRows[0].army_unit_id;
+
+  // Step 2: Fetch labourers assigned to that army_unit_id
+  const [labourRows] = await db.query(
+    'SELECT id, name, contact_number, aadhaar_number FROM labourers WHERE army_unit_id = ?',
+    [armyUnitId]
+  );
+
+  return labourRows;
+};
