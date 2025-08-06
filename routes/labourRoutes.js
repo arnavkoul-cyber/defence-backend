@@ -15,7 +15,10 @@ const storage = multer.diskStorage({
     cb(null, filename);
   }
 });
-const upload = multer({ storage });
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 } 
+});
 
 router.post('/register', upload.single('photo'), labourController.registerLabour);
 router.get('/:officer_id', labourController.laboursList);
