@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const attendanceRoutes = require('./routes/attendanceRoutes');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -14,6 +15,7 @@ const dynamicRoutes = require('./routes/dynamicRoutes');
 app.use('/api/labour', labourRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/dynamic', dynamicRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
