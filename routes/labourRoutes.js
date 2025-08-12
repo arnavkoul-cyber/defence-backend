@@ -20,7 +20,15 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 } 
 });
 
-router.post('/register', upload.single('photo'), labourController.registerLabour);
+// router.post('/register', upload.single('photo'), labourController.registerLabour);
+router.post(
+  '/register',
+  upload.fields([
+    { name: 'photo', maxCount: 1 },
+    { name: 'adhar', maxCount: 1 }
+  ]),
+  labourController.registerLabour
+);
 router.delete('/:id', labourController.deleteLabour);
 router.get('/:officer_id', labourController.laboursList);
 router.post('/assign-army-unit', labourController.assignArmyUnit);
