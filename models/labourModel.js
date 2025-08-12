@@ -11,14 +11,14 @@ exports.checkDuplicate = async (aadhaar, phone) => {
 exports.registerLabour = async (labourData) => {
   const {
     name, father_name, sector_id,
-    contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path
+    contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path, labour_type
   } = labourData;
 
   const [result] = await db.query(
     `INSERT INTO labourers 
-      (name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path]
+      (name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path, labour_type)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path, labour_type]
   );
 
   return result.insertId;
@@ -34,20 +34,66 @@ exports.laboursByOfficer = async (id) => {
   return rows;
 };
 
-exports.assignArmyUnits = async (army_unit_id,labour_ids) => {
-    try{
-        const [result] = await db.query(
-        `UPDATE labourers 
-        SET army_unit_id = ? 
-        WHERE id IN (?)`,
-        [army_unit_id, labour_ids]
-        );
-        return result
-    }catch(err){
-        throw(err);
-    }
+// exports.assignArmyUnits = async (army_unit_id,labour_ids) => {
+//     try{
+//         const [result] = await db.query(
+//         `UPDATE labourers 
+//         SET army_unit_id = ? 
+//         WHERE id IN (?)`,
+//         [army_unit_id, labour_ids]
+//         );
+//         return result
+//     }catch(err){
+//         throw(err);
+//     }
   
+// };
+exports.assignArmyUnits = async ({ army_unit_id, labour_ids, start_date, end_date, assigned_by, status }) => {
+  try {
+    const fields = [];
+    const values = [];
+
+    if (army_unit_id !== undefined) {
+      fields.push("army_unit_id = ?");
+      values.push(army_unit_id);
+    }
+    if (start_date !== undefined) {
+      fields.push("start_date = ?");
+      values.push(start_date);
+    }
+    if (end_date !== undefined) {
+      fields.push("end_date = ?");
+      values.push(end_date);
+    }
+    if (assigned_by !== undefined) {
+      fields.push("assigned_by = ?");
+      values.push(assigned_by);
+    }
+    if (status !== undefined) {
+      fields.push("status = ?");
+      values.push(status);
+    }
+
+    if (fields.length === 0) {
+      throw new Error("No fields provided to update.");
+    }
+
+    // Add labour_ids for WHERE condition
+    values.push(labour_ids);
+
+    const query = `
+      UPDATE labourers
+      SET ${fields.join(", ")}
+      WHERE id IN (?)
+    `;
+
+    const [result] = await db.query(query, values);
+    return result;
+  } catch (err) {
+    throw err;
+  }
 };
+
 exports.getAssignedLaboursByMobile = async (mobileNumber) => {
   // Step 1: Get army_unit_id from users table
   const [userRows] = await db.query(

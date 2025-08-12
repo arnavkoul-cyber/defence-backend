@@ -6,7 +6,7 @@ const path = require('path');
 
 exports.registerLabour = async (req, res) => {
   try {
-    const { name, father_name, sector_id, contact_number, aadhaar_number, status, bank_name, bank_account_no, bank_ifsc_code } = req.body;
+    const { name, father_name, sector_id, contact_number, aadhaar_number, status, bank_name, bank_account_no, bank_ifsc_code, labour_type } = req.body;
     // const photo_path = req.file ? req.file.path : null;
     // const adhar_path = req.file ? req.file.path : null;
 
@@ -26,7 +26,7 @@ const adhar_path = req.files?.adhar?.[0]
 
     const labourId = await labourModel.registerLabour({
       name, father_name, sector_id,
-      contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path
+      contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path, labour_type
     });
 
     res.status(201).json({
@@ -63,17 +63,52 @@ exports.laboursList = async (req, res) => {
 };
 
 
+// exports.assignArmyUnit = async (req, res) => {
+//   try {
+//     const { army_unit_id, labour_ids } = req.body;
+
+//     if (!army_unit_id || !Array.isArray(labour_ids) || labour_ids.length === 0) {
+//       return res.status(400).json({ error: 'army_unit_id and labour_ids are required' });
+//     }
+
+//     const result = await labourModel.assignArmyUnits(army_unit_id,labour_ids)
+//     res.status(200).json({
+//       message: 'Labours assigned successfully',
+//       updated_count: result.affectedRows
+//     });
+//   } catch (err) {
+//     console.error('Error assigning army unit:', err);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// };
 exports.assignArmyUnit = async (req, res) => {
   try {
-    const { army_unit_id, labour_ids } = req.body;
+    const {
+      army_unit_id,
+      labour_ids,
+      start_date,
+      end_date,
+      assigned_by,
+      status
+    } = req.body;
 
-    if (!army_unit_id || !Array.isArray(labour_ids) || labour_ids.length === 0) {
-      return res.status(400).json({ error: 'army_unit_id and labour_ids are required' });
+    if (!Array.isArray(labour_ids) || labour_ids.length === 0) {
+      return res.status(400).json({ error: 'labour_ids array is required' });
     }
 
-    const result = await labourModel.assignArmyUnits(army_unit_id,labour_ids)
+    const updateData = {
+      army_unit_id,
+      start_date,
+      end_date,
+      assigned_by,
+      status,
+      labour_ids
+    };
+
+    const result = await labourModel.assignArmyUnits(updateData);
+
     res.status(200).json({
-      message: 'Labours assigned successfully',
+      message: 'Labours updated successfully',
       updated_count: result.affectedRows
     });
   } catch (err) {
