@@ -14,7 +14,7 @@ const photo_path = req.files?.photo?.[0]
   ? req.files.photo[0].path.replace(/\\/g, "/")
   : null;
 
-const adhar_path = req.files?.aadhaar?.[0]
+const adhar_path = req.files?.adhar?.[0]
   ? req.files.adhar[0].path.replace(/\\/g, "/")
   : null;
 
