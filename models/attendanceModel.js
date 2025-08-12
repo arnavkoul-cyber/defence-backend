@@ -1,11 +1,18 @@
 const db = require('../config/db');
+const cron = require('node-cron');
+
+cron.schedule('0 0 * * *', async () => {
+  await db.query(`UPDATE attendances SET status = 0 WHERE attendance_date < CURDATE()`);
+  console.log("Reset attendance status for previous days");
+});
+
 
 // Save attendance
 exports.markAttendance = async ({ labour_id, army_unit_id, photo_path, attendance_date }) => {
   const [result] = await db.query(
-    `INSERT INTO attendances (labour_id, army_unit_id, photo_path, attendance_date) 
-     VALUES (?, ?, ?, ?)`,
-    [labour_id, army_unit_id, photo_path, attendance_date]
+    `INSERT INTO attendances (labour_id, army_unit_id, photo_path, attendance_date,status) 
+     VALUES (?, ?, ?, ?,?)`,
+    [labour_id, army_unit_id, photo_path, attendance_date,1]
   );
   return result.insertId;
 };

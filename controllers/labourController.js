@@ -6,8 +6,10 @@ const path = require('path');
 
 exports.registerLabour = async (req, res) => {
   try {
-    const { name, father_name, sector_id, contact_number, aadhaar_number } = req.body;
+    const { name, father_name, sector_id, contact_number, aadhaar_number, status, bank_name, bank_account_no, bank_ifsc_code } = req.body;
     const photo_path = req.file ? req.file.path : null;
+    const adhar_path = req.file ? req.file.path : null;
+
 
     // Check for duplicate Aadhaar or contact number
     const isDuplicate = await labourModel.checkDuplicate(aadhaar_number, contact_number);
@@ -17,7 +19,7 @@ exports.registerLabour = async (req, res) => {
 
     const labourId = await labourModel.registerLabour({
       name, father_name, sector_id,
-      contact_number, aadhaar_number, photo_path
+      contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path
     });
 
     res.status(201).json({

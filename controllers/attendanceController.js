@@ -6,7 +6,8 @@ const path = require('path');
 exports.markAttendance = async (req, res) => {
   try {
     const { labour_id, army_unit_id, attendance_date } = req.body;
-    const photo_path = req.file ? req.file.path : null;
+    const photo_path = req.file ? req.file.path.replace(/\\\\/g, '/').replace(/\\/g, '/') : null;
+    console.log("photo path",photo_path)
 
     if (!labour_id || !army_unit_id || !attendance_date || !photo_path) {
       return res.status(400).json({ error: 'Missing required fields' });

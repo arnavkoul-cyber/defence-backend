@@ -11,14 +11,14 @@ exports.checkDuplicate = async (aadhaar, phone) => {
 exports.registerLabour = async (labourData) => {
   const {
     name, father_name, sector_id,
-    contact_number, aadhaar_number, photo_path
+    contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path
   } = labourData;
 
   const [result] = await db.query(
     `INSERT INTO labourers 
-      (name, father_name, sector_id, contact_number, aadhaar_number, photo_path)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [name, father_name, sector_id, contact_number, aadhaar_number, photo_path]
+      (name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [name, father_name, sector_id, contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path]
   );
 
   return result.insertId;
