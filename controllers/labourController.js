@@ -6,9 +6,11 @@ const path = require('path');
 
 exports.registerLabour = async (req, res) => {
   try {
-    const { name, father_name, sector_id, contact_number, aadhaar_number, status, bank_name, bank_account_no, bank_ifsc_code } = req.body;
-    const photo_path = req.file ? req.file.path : null;
-    const adhar_path = req.file ? req.file.path : null;
+  const { name, father_name, sector_id, contact_number, aadhaar_number, status, bank_name, bank_account_no, bank_ifsc_code } = req.body;
+  // Handle multipart files from upload.fields
+  const photo_path = req.files?.photo?.[0]?.path || null;
+  const adhar_path = (req.files?.aadhaar?.[0]?.path || req.files?.aadhar?.[0]?.path || req.files?.adhar?.[0]?.path) || null;
+  const normalizedStatus = status ?? 1;
 
 
     // Check for duplicate Aadhaar or contact number
@@ -17,9 +19,14 @@ exports.registerLabour = async (req, res) => {
       return res.status(400).json({ error: 'Aadhaar or contact number already exists' });
     }
 
+    // If DB requires adhar_path, enforce presence
+    if (!adhar_path) {
+      return res.status(400).json({ error: 'aadhaar file is required' });
+    }
+
     const labourId = await labourModel.registerLabour({
       name, father_name, sector_id,
-      contact_number, aadhaar_number, photo_path, status, bank_name, bank_account_no, bank_ifsc_code, adhar_path
+      contact_number, aadhaar_number, photo_path, status: normalizedStatus, bank_name, bank_account_no, bank_ifsc_code, adhar_path
     });
 
     res.status(201).json({
