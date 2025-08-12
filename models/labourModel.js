@@ -69,3 +69,9 @@ exports.getAssignedLaboursByMobile = async (mobileNumber) => {
 
   return labourRows;
 };
+
+// Delete a labour by id
+exports.deleteById = async (id) => {
+  const [result] = await db.query('DELETE FROM labourers WHERE id = ?', [id]);
+  return result;
+};

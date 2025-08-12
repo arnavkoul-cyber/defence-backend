@@ -21,9 +21,11 @@ const upload = multer({
 });
 
 router.post('/register', upload.single('photo'), labourController.registerLabour);
+router.delete('/:id', labourController.deleteLabour);
 router.get('/:officer_id', labourController.laboursList);
 router.post('/assign-army-unit', labourController.assignArmyUnit);
 
 router.get('/assigned/:mobile_number', labourController.getAssignedLaboursByMobile);
+
 
 module.exports = router;

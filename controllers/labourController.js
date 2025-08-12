@@ -151,3 +151,20 @@ exports.getAssignedLaboursByMobile = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+exports.deleteLabour = async (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ error: 'id is required' });
+
+  try {
+    const result = await labourModel.deleteById(id);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Labour not found' });
+    return res.json({ message: 'Labour deleted' });
+  } catch (err) {
+    console.error('Error deleting labour:', err);
+    // Possible FK error if attendance records exist
+    if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+      return res.status(409).json({ error: 'Cannot delete: attendance or related records exist' });
+    }
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
