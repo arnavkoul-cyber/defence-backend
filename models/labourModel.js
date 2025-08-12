@@ -48,7 +48,7 @@ exports.laboursByOfficer = async (id) => {
 //     }
   
 // };
-exports.assignArmyUnits = async ({ army_unit_id, labour_ids, start_date, end_date, assigned_by, status }) => {
+exports.assignArmyUnits = async ({ army_unit_id, labour_ids, start_date, end_date, assigned_by, status, remarks }) => {
   try {
     const fields = [];
     const values = [];
@@ -73,7 +73,10 @@ exports.assignArmyUnits = async ({ army_unit_id, labour_ids, start_date, end_dat
       fields.push("status = ?");
       values.push(status);
     }
-
+   if (remarks !== undefined) {
+      fields.push("remarks = ?");
+      values.push(remarks);
+    }
     if (fields.length === 0) {
       throw new Error("No fields provided to update.");
     }
@@ -109,7 +112,7 @@ exports.getAssignedLaboursByMobile = async (mobileNumber) => {
 
   // Step 2: Fetch labourers assigned to that army_unit_id
   const [labourRows] = await db.query(
-    'SELECT id, name, contact_number, aadhaar_number FROM labourers WHERE army_unit_id = ?',
+    'SELECT id, name, contact_number, start_date, end_date, photo_path FROM labourers WHERE army_unit_id = ?',
     [armyUnitId]
   );
 

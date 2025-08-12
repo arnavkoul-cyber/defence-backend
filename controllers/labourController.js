@@ -89,7 +89,8 @@ exports.assignArmyUnit = async (req, res) => {
       start_date,
       end_date,
       assigned_by,
-      status
+      status,
+      remarks
     } = req.body;
 
     if (!Array.isArray(labour_ids) || labour_ids.length === 0) {
@@ -102,6 +103,7 @@ exports.assignArmyUnit = async (req, res) => {
       end_date,
       assigned_by,
       status,
+      remarks,
       labour_ids
     };
 
