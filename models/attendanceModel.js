@@ -8,11 +8,11 @@ cron.schedule('0 0 * * *', async () => {
 
 
 // Save attendance
-exports.markAttendance = async ({ labour_id, army_unit_id, photo_path, attendance_date }) => {
+exports.markAttendance = async ({ labour_id, army_unit_id, photo_path, attendance_date,status }) => {
   const [result] = await db.query(
     `INSERT INTO attendances (labour_id, army_unit_id, photo_path, attendance_date,status) 
      VALUES (?, ?, ?, ?,?)`,
-    [labour_id, army_unit_id, photo_path, attendance_date,1]
+    [labour_id, army_unit_id, photo_path, attendance_date,status]
   );
   return result.insertId;
 };

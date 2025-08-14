@@ -5,7 +5,7 @@ const path = require('path');
 
 exports.markAttendance = async (req, res) => {
   try {
-    const { labour_id, army_unit_id, attendance_date } = req.body;
+    const { labour_id, army_unit_id, attendance_date,status } = req.body;
     const photo_path = req.file ? req.file.path.replace(/\\\\/g, '/').replace(/\\/g, '/') : null;
     console.log("photo path",photo_path)
 
@@ -18,6 +18,7 @@ exports.markAttendance = async (req, res) => {
       army_unit_id,
       photo_path,
       attendance_date,
+      status
     });
 
     res.status(201).json({
