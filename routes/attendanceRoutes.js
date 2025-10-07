@@ -25,5 +25,7 @@ router.post('/mark', upload.single('photo'), attendanceController.markAttendance
 router.get('/army/:army_unit_id', attendanceController.getByArmyUnit);
 router.get('/labour/:labour_id', attendanceController.getByLabour);
 router.get('/filter', attendanceController.getByDate);
+// Monthly report: ?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD&army_unit_id=1 (optional)
+router.get('/report/range', attendanceController.getRangeReport);
 
 module.exports = router;

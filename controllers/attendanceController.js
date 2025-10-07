@@ -1,3 +1,17 @@
+// GET /api/attendance/report/range?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD&army_unit_id=1
+exports.getRangeReport = async (req, res) => {
+  try {
+    const { start_date, end_date, army_unit_id } = req.query;
+    if (!start_date || !end_date) {
+      return res.status(400).json({ error: 'start_date and end_date are required in YYYY-MM-DD format' });
+    }
+    const data = await attendanceModel.getRangeReport(start_date, end_date, army_unit_id);
+    res.status(200).json({ report: data });
+  } catch (err) {
+    console.error('Error fetching range report:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 // const attendanceModel = require('./models/attendanceModel');
 const attendanceModel = require('../models/AttendanceModel')
 const path = require('path');
@@ -65,6 +79,23 @@ exports.getByDate = async (req, res) => {
     res.status(200).json({ attendances: data });
   } catch (err) {
     console.error('Error fetching attendance by date:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// GET /api/attendance/report/monthly?month=YYYY-MM&army_unit_id=1
+exports.getMonthlyReport = async (req, res) => {
+  try {
+    const { month, army_unit_id } = req.query;
+
+    if (!month) {
+      return res.status(400).json({ error: 'month is required in YYYY-MM format' });
+    }
+
+    const data = await attendanceModel.getMonthlyReport(month, army_unit_id);
+    res.status(200).json({ report: data });
+  } catch (err) {
+    console.error('Error fetching monthly report:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };

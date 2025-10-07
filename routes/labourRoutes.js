@@ -25,7 +25,9 @@ router.post(
   '/register',
   upload.fields([
     { name: 'photo', maxCount: 1 },
-    { name: 'adhar', maxCount: 1 }
+    { name: 'adhar', maxCount: 1 },
+    { name: 'pan', maxCount: 1 },
+    { name: 'pan_card', maxCount: 1 }
   ]),
   labourController.registerLabour
 );
