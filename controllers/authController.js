@@ -22,7 +22,8 @@ exports.loginWithJWT = async (req, res) => {
         role_id: user.role_id,
         sector_id: user.sector_id,
         army_unit_id: user.army_unit_id,
-        mobile_number:user.mobile_number
+        mobile_number: user.mobile_number,
+        role: user.role // add role if present
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
@@ -37,7 +38,8 @@ exports.loginWithJWT = async (req, res) => {
         role_id: user.role_id,
         sector_id: user.sector_id,
         army_unit_id: user.army_unit_id,
-        mobile_number:user.mobile_number
+        mobile_number: user.mobile_number,
+        role: user.role // add role in response
       }
     });
   } catch (err) {
