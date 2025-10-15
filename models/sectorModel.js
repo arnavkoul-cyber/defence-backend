@@ -1,3 +1,7 @@
+exports.deleteSectorByName = async (name) => {
+  const [result] = await db.query('DELETE FROM sectors WHERE name = ?', [name]);
+  return result;
+};
 const db = require('../config/db');
 
 exports.getAllSectors = async () => {

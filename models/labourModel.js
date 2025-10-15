@@ -27,9 +27,9 @@ exports.registerLabour = async (labourData) => {
 
 exports.laboursByOfficer = async (id) => {
   const [rows] = await db.query(
-    `select labourers.* from users
-    join labourers on users.sector_id = labourers.sector_id
-    where users.id=?`,
+    `SELECT labourers.*, labourers.pan_number, labourers.pan_path FROM users
+    JOIN labourers ON users.sector_id = labourers.sector_id
+    WHERE users.id=?`,
     [id]
   );
   return rows;
@@ -113,7 +113,7 @@ exports.getAssignedLaboursByMobile = async (mobileNumber) => {
 
   // Step 2: Fetch labourers assigned to that army_unit_id
   const [labourRows] = await db.query(
-    'SELECT id, name, contact_number, start_date, end_date, photo_path FROM labourers WHERE army_unit_id = ?',
+    'SELECT id, name, contact_number, start_date, end_date, photo_path, pan_number, pan_path FROM labourers WHERE army_unit_id = ?',
     [armyUnitId]
   );
 

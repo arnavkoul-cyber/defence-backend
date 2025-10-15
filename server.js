@@ -20,11 +20,13 @@ app.use('/uploads', express.static('uploads')); // Serve uploaded files
 const authRoutes = require('./routes/authRoutes')
 const labourRoutes = require('./routes/labourRoutes');
 const dynamicRoutes = require('./routes/dynamicRoutes');
+const armyUnitRoutes = require('./routes/armyUnitRoutes');
 const userRoutes = require('./routes/userRoutes');
 const sectorRoutes = require('./routes/sectorRoutes');
 app.use('/api/labour', labourRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/dynamic', dynamicRoutes);
+app.use('/api/army-units', armyUnitRoutes);
 
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/users', userRoutes);

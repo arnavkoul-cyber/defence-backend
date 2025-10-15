@@ -9,4 +9,8 @@ router.get('/', authMiddleware, sectorController.getAllSectors);
 // POST /api/sectors
 router.post('/', authMiddleware, sectorController.createSector);
 
+
+// DELETE /api/sectors/name/:name
+router.delete('/name/:name', authMiddleware, sectorController.deleteSectorByName);
+
 module.exports = router;
