@@ -13,7 +13,7 @@ exports.getRangeReport = async (req, res) => {
   }
 };
 // const attendanceModel = require('./models/attendanceModel');
-const attendanceModel = require('../models/AttendanceModel')
+const attendanceModel = require('../models/attendanceModel')
 const path = require('path');
 
 
