@@ -11,6 +11,13 @@ exports.deleteSectorByName = async (req, res) => {
     }
     res.json({ success: true, message: 'Sector deleted' });
   } catch (err) {
+    // MySQL FK error code is ER_ROW_IS_REFERENCED_2 or errno 1451
+    if (err.code === 'ER_ROW_IS_REFERENCED_2' || err.errno === 1451) {
+      return res.status(409).json({ 
+        success: false, 
+        error: 'Cannot delete sector: There are users/labourers assigned to this sector. Please delete or reassign those users before deleting the sector.'
+      });
+    }
     res.status(500).json({ success: false, error: err.message || err });
   }
 };

@@ -32,6 +32,7 @@ router.post(
   labourController.registerLabour
 );
 router.delete('/:id', labourController.deleteLabour);
+router.get('/all/admin', labourController.getAllLabourers);
 router.get('/:officer_id', labourController.laboursList);
 router.post('/assign-army-unit', labourController.assignArmyUnit);
 

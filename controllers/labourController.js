@@ -220,3 +220,18 @@ exports.deleteLabour = async (req, res) => {
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
+// Get all labourers (Admin)
+exports.getAllLabourers = async (req, res) => {
+  try {
+    const labourers = await labourModel.getAllLabourers();
+    res.status(200).json({
+      success: true,
+      count: labourers.length,
+      data: labourers
+    });
+  } catch (err) {
+    console.error('Error fetching all labourers:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

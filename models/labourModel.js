@@ -112,10 +112,10 @@ exports.getAssignedLaboursByMobile = async (mobileNumber) => {
   const armyUnitId = userRows[0].army_unit_id;
 
   // Step 2: Fetch labourers assigned to that army_unit_id
-  const [labourRows] = await db.query(
-    'SELECT id, name, contact_number, start_date, end_date, photo_path, pan_number, pan_path FROM labourers WHERE army_unit_id = ?',
-    [armyUnitId]
-  );
+    const [labourRows] = await db.query(
+      'SELECT id, name, contact_number, start_date, end_date, photo_path, pan_number, pan_path, created_at FROM labourers WHERE army_unit_id = ?',
+      [armyUnitId]
+    );
 
   return labourRows;
 };
@@ -124,4 +124,19 @@ exports.getAssignedLaboursByMobile = async (mobileNumber) => {
 exports.deleteById = async (id) => {
   const [result] = await db.query('DELETE FROM labourers WHERE id = ?', [id]);
   return result;
+};
+
+// Get all labourers for admin
+exports.getAllLabourers = async () => {
+  const [rows] = await db.query(
+    `SELECT 
+      l.*,
+      s.name as sector_name,
+      au.name as army_unit_name
+    FROM labourers l
+    LEFT JOIN sectors s ON l.sector_id = s.id
+    LEFT JOIN army_units au ON l.army_unit_id = au.id
+    ORDER BY l.created_at DESC`
+  );
+  return rows;
 };
